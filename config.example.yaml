@@ -1,0 +1,83 @@
+# cpms configuration.
+#
+# This file is read-only to the tool: cpms never writes it back, so comments
+# and formatting survive. Anything cpms learns at runtime — the counterparty's
+# OCPI token, active reservations, last known status — goes to state.json.
+#
+# Validate a copy of this file with:  cpms config validate -c config.yaml
+
+charger:
+  # Must match the charge point identity the station sends in its OCPP
+  # WebSocket URL: ws://<host>:<ocpp_bind port>/ocpp/<id>
+  id: ALP-HYC-001
+  # Used only for a reachability pre-check and for display. The OCPP link is
+  # dialled by the charger, not by us.
+  ip: 192.168.1.42
+  ocpp_version: "1.6"
+  # Silence longer than this marks the station offline.
+  heartbeat_timeout: 90s
+
+server:
+  # Where we listen for the charger. Point the station's CSMS URL here.
+  ocpp_bind: 0.0.0.0:9000
+  # Where we serve OCPI on the LAN.
+  ocpi_bind: 0.0.0.0:8080
+
+auth:
+  # The office RFID tag, used when a command does not name one.
+  default_id_tag: "04A1B2C3D4"
+
+ocpi:
+  country_code: DE
+  party_id: FRY
+  # The OCPI root we advertise to the counterparty. It has to be reachable
+  # from their host, which is why it is not derived from ocpi_bind above.
+  public_base_url: http://192.168.1.10:8080/ocpi
+  # Handed to the counterparty out of band so they can start registration.
+  token_a: "change-me-token-a"
+  # What the counterparty authenticates with once registered. OCPI normally
+  # has the server generate this during the handshake; we take it from config
+  # so this file stays read-only.
+  token_c: "change-me-token-c"
+  push:
+    # Coalesce rapid status flapping into a single PATCH.
+    debounce: 500ms
+    max_retries: 5
+
+# Static OCPI Location data. Served verbatim; only the per-EVSE status is
+# filled in live from the OCPP connection.
+location:
+  id: OFFICE-01
+  name: Fryte HQ
+  address: Musterstrasse 1
+  city: Berlin
+  postal_code: "10115"
+  country: DEU
+  coordinates:
+    latitude: "52.520008"
+    longitude: "13.404954"
+  evses:
+    - uid: ALP-HYC-001-1
+      evse_id: DE*FRY*E001*1
+      # OCPP 1.6 addresses this outlet by connector id. 0 is reserved for the
+      # charge point as a whole, so EVSEs start at 1.
+      ocpp_connector_id: 1
+      connectors:
+        - id: "1"
+          standard: IEC_62196_T2_COMBO
+          format: CABLE
+          power_type: DC
+          max_voltage: 920
+          max_amperage: 500
+          max_electric_power: 400000
+    - uid: ALP-HYC-001-2
+      evse_id: DE*FRY*E001*2
+      ocpp_connector_id: 2
+      connectors:
+        - id: "1"
+          standard: IEC_62196_T2_COMBO
+          format: CABLE
+          power_type: DC
+          max_voltage: 920
+          max_amperage: 500
+          max_electric_power: 400000

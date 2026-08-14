@@ -1,0 +1,58 @@
+# A fully-specified config. public_base_url deliberately carries a trailing
+# slash so the loader's normalisation is exercised.
+charger:
+  id: ALP-HYC-001
+  ip: 192.168.1.42
+  ocpp_version: "1.6"
+  heartbeat_timeout: 120s
+
+server:
+  ocpp_bind: 0.0.0.0:9000
+  ocpi_bind: 0.0.0.0:8080
+
+auth:
+  default_id_tag: "04A1B2C3D4"
+
+ocpi:
+  country_code: DE
+  party_id: FRY
+  public_base_url: http://192.168.1.10:8080/ocpi/
+  token_a: "token-a-secret"
+  token_c: "token-c-secret"
+  push:
+    debounce: 250ms
+    max_retries: 3
+
+location:
+  id: OFFICE-01
+  name: Fryte HQ
+  address: Musterstrasse 1
+  city: Berlin
+  postal_code: "10115"
+  country: DEU
+  coordinates:
+    latitude: "52.520008"
+    longitude: "13.404954"
+  evses:
+    - uid: ALP-HYC-001-1
+      evse_id: DE*FRY*E001*1
+      ocpp_connector_id: 1
+      connectors:
+        - id: "1"
+          standard: IEC_62196_T2_COMBO
+          format: CABLE
+          power_type: DC
+          max_voltage: 920
+          max_amperage: 500
+          max_electric_power: 400000
+    - uid: ALP-HYC-001-2
+      evse_id: DE*FRY*E001*2
+      ocpp_connector_id: 2
+      connectors:
+        - id: "1"
+          standard: IEC_62196_T2_COMBO
+          format: CABLE
+          power_type: DC
+          max_voltage: 920
+          max_amperage: 500
+          max_electric_power: 400000
