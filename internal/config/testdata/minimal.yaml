@@ -1,0 +1,34 @@
+# Only the fields that have no sensible default. Everything else must be
+# filled in by applyDefaults.
+charger:
+  id: ALP-HYC-001
+
+auth:
+  default_id_tag: "04A1B2C3D4"
+
+ocpi:
+  country_code: DE
+  party_id: FRY
+  public_base_url: http://10.0.0.5:8080/ocpi
+  token_a: "token-a-secret"
+  token_c: "token-c-secret"
+
+location:
+  id: OFFICE-01
+  address: Musterstrasse 1
+  city: Berlin
+  country: DEU
+  coordinates:
+    latitude: "52.520008"
+    longitude: "13.404954"
+  evses:
+    - uid: E1
+      evse_id: DE*FRY*E001*1
+      ocpp_connector_id: 1
+      connectors:
+        - id: "1"
+          standard: IEC_62196_T2_COMBO
+          format: CABLE
+          power_type: DC
+          max_voltage: 920
+          max_amperage: 500

@@ -1,0 +1,35 @@
+version: "2"
+
+linters:
+  # The standard set (errcheck, govet, ineffassign, staticcheck, unused) plus a
+  # few that catch the mistakes most likely to reach an operator: unhandled
+  # error returns in the protocol paths, and typos in user-facing strings.
+  default: standard
+  enable:
+    - bodyclose
+    - misspell
+    - revive
+  settings:
+    errcheck:
+      # Writing to stdout/stderr is best-effort: there is nowhere useful to
+      # report a failure to report something.
+      exclude-functions:
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+    revive:
+      rules:
+        - name: exported
+          arguments: [checkPrivateReceivers]
+        - name: package-comments
+        - name: indent-error-flow
+        - name: errorf
+  exclusions:
+    rules:
+      # Test helpers legitimately ignore errors on cleanup paths.
+      - path: _test\.go
+        linters: [errcheck]
+
+formatters:
+  enable:
+    - gofmt
