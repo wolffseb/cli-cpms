@@ -14,8 +14,14 @@ charger:
   # dialled by the charger, not by us.
   ip: 192.168.1.42
   ocpp_version: "1.6"
-  # Silence longer than this marks the station offline.
+  # What we tell the station in the BootNotification response: how often it
+  # should check in.
+  heartbeat_interval: 60s
+  # Silence longer than this marks the station offline. Must exceed the
+  # interval above, or a punctual station gets marked offline between beats.
   heartbeat_timeout: 90s
+  # How long an outbound command waits for the station to answer.
+  call_timeout: 30s
 
 server:
   # Where we listen for the charger. Point the station's CSMS URL here.
