@@ -186,6 +186,9 @@ Built in tracked steps; each lands as its own PR.
 Out of scope for now: the OCPI Booking module, CDRs, sessions, tariffs, payment terminals,
 multiple OCPI versions, and any web UI.
 
+Ideas that are worth keeping but not planned, among them CDRs, an API-only mode and a fuller
+terminal UI, live in the [idea fridge](docs/IDEAS.md).
+
 ## License
 
 [MIT](LICENSE).
