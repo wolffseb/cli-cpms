@@ -189,3 +189,6 @@ multiple OCPI versions, and any web UI.
 ## License
 
 [MIT](LICENSE).
+
+This is a personal hobby project. It is used as an internal test environment at Fryte,
+but it is not an official Fryte product and Fryte does not maintain or support it.
