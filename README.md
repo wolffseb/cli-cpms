@@ -185,3 +185,7 @@ Built in tracked steps; each lands as its own PR.
 
 Out of scope for now: the OCPI Booking module, CDRs, sessions, tariffs, payment terminals,
 multiple OCPI versions, and any web UI.
+
+## License
+
+[MIT](LICENSE).
