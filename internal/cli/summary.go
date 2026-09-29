@@ -14,7 +14,7 @@ import (
 // printSummary renders the loaded config as the operator needs to see it: the
 // facts they have to get right for the station and the counterparty to reach
 // us, and the EVSE mapping that links the two addressing schemes.
-func printSummary(cmd *cobra.Command, cfg *config.Config) {
+func printSummary(cmd *cobra.Command, cfg *config.Config, statePath string) {
 	out := cmd.OutOrStdout()
 
 	charger := cfg.Charger.ID + "  (OCPP " + cfg.Charger.OCPPVersion + ")"
@@ -32,6 +32,7 @@ func printSummary(cmd *cobra.Command, cfg *config.Config) {
 	fmt.Fprintf(w, "  OCPI party\t%s*%s\n", cfg.OCPI.CountryCode, cfg.OCPI.PartyID)
 	fmt.Fprintf(w, "  Default RFID tag\t%s\n", cfg.Auth.DefaultIDTag)
 	fmt.Fprintf(w, "  Location\t%s\n", locationLine(cfg))
+	fmt.Fprintf(w, "  State file\t%s\n", statePath)
 	_ = w.Flush()
 
 	fmt.Fprintln(out)
