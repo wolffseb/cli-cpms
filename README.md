@@ -47,6 +47,7 @@ config.yaml is valid.
   OCPI party          DE*FYT
   Default RFID tag    04A1B2C3D4
   Location            OFFICE-01 "Fryte HQ", München (DEU) — 2 EVSEs, 2 connectors
+  State file          state.json
 
   EVSE           EVSE ID        OCPP CONNECTOR  CONNECTORS
   ALP-HYC-001-1  DE*FYT*E001*1  1               IEC_62196_T2_COMBO/CABLE/DC 920V 500A
@@ -125,6 +126,14 @@ Two files, one rule: **`config.yaml` is read-only to the tool.** It holds what y
 `state.json` holds what the tool learns at runtime (the counterparty's token and endpoints,
 active reservations, last known status) and is the only file cpms writes.
 
+`state.json` sits next to the config file by default, wherever cpms is started from;
+`--state <path>` puts it elsewhere, and `cpms config validate` prints which file is in use.
+It is created on the first write, not at startup, so a tool that has never been registered
+leaves no trace. Writes are atomic (temp file, fsync, rename) and the file is `0600`, because it
+holds the counterparty's bearer token. It is indented JSON, so `cat` works. A file cpms cannot
+parse, or one written by a newer cpms, stops `cpms run` at startup with the file named, and is
+never overwritten: move it aside to start from empty state.
+
 That split is why `ocpi.token_c` is a fixed value in config rather than being generated
 during the OCPI handshake as implementations usually do.
 
@@ -143,6 +152,7 @@ internal/ocpp/csms   the WebSocket server a charge point dials into
 internal/ocpp/v16    OCPP 1.6-J payloads and the adapter that writes to core
 internal/simulator   a charge point: dials a CSMS and behaves like a station
 internal/ocpptest    a raw OCPP-J client used by the tests
+internal/state       state.json: the persisted DTOs and the atomic-write store
 ```
 
 `csms` never learns a message name: it routes `(charge point, action, raw payload)` to the

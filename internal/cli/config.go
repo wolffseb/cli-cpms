@@ -33,7 +33,7 @@ func newConfigValidateCommand(opts *options) *cobra.Command {
 			}
 
 			cmd.Printf("%s is valid.\n\n", opts.configPath)
-			printSummary(cmd, cfg)
+			printSummary(cmd, cfg, opts.resolvedStatePath())
 			return nil
 		},
 	}

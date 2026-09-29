@@ -17,6 +17,7 @@ import (
 	"github.com/wolffseb/cli-cpms/internal/ocpp"
 	"github.com/wolffseb/cli-cpms/internal/ocpp/csms"
 	"github.com/wolffseb/cli-cpms/internal/ocpp/v16"
+	"github.com/wolffseb/cli-cpms/internal/state"
 )
 
 // shutdownGrace bounds how long we wait for connections to close on exit.
@@ -41,7 +42,7 @@ func newRunCommand(opts *options) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			return run(cmd, cfg, logger)
+			return run(cmd, cfg, opts.resolvedStatePath(), logger)
 		},
 	}
 
@@ -49,7 +50,7 @@ func newRunCommand(opts *options) *cobra.Command {
 	return cmd
 }
 
-func run(cmd *cobra.Command, cfg *config.Config, logger *slog.Logger) error {
+func run(cmd *cobra.Command, cfg *config.Config, statePath string, logger *slog.Logger) error {
 	// OCPP 2.0.1 is a separate adapter that does not exist yet. Failing here
 	// beats accepting the config and then rejecting the charger's handshake
 	// with a confusing "no common version".
@@ -57,6 +58,14 @@ func run(cmd *cobra.Command, cfg *config.Config, logger *slog.Logger) error {
 		return fmt.Errorf("OCPP %s is not implemented yet; set charger.ocpp_version to \"1.6\"",
 			cfg.Charger.OCPPVersion)
 	}
+
+	// Nothing reads the state yet, but a corrupt or newer file has to stop us
+	// before anything starts depending on it, not halfway through a session.
+	store, err := state.Open(statePath)
+	if err != nil {
+		return err
+	}
+	logger.Debug("state file", "path", store.Path())
 
 	svc := core.New(cfg)
 	handler := v16.NewHandler(cfg, svc, logger)
