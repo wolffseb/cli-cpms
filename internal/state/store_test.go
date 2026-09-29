@@ -362,6 +362,7 @@ func full(at time.Time) State {
 		},
 		NextReservationID: 43,
 		NextTransactionID: 1001,
+		NextRemoteStartID: 5,
 		Reservations: []Reservation{{
 			ID:                42,
 			OCPIReservationID: "c6a1f0e2-7b1d-4c1e-9d3a-5f0b8a2c9e11",

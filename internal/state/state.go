@@ -1,6 +1,6 @@
 // Package state persists what cpms learns at runtime to state.json: the OCPI
 // registration, the active reservations and transactions, and the id counters
-// that keep reservation and transaction ids from being reused.
+// that keep reservation, transaction and remote-start ids from being reused.
 //
 // config.yaml is read-only to the tool; this is the only file cpms writes. The
 // package imports nothing else from internal/, so any layer can use it without
@@ -25,8 +25,12 @@ type State struct {
 	OCPI              *OCPIRegistration `json:"ocpi,omitempty"` // nil = not registered
 	NextReservationID int               `json:"next_reservation_id"`
 	NextTransactionID int               `json:"next_transaction_id"`
-	Reservations      []Reservation     `json:"reservations"` // active only
-	Transactions      []Transaction     `json:"transactions"` // active only: this is not a history
+	// NextRemoteStartID feeds the remoteStartId OCPP 2.0.1 requires on
+	// RequestStartTransaction and echoes in TransactionEvent. 1.6 has no such
+	// field, but the counter advances for every remote start regardless.
+	NextRemoteStartID int           `json:"next_remote_start_id"`
+	Reservations      []Reservation `json:"reservations"` // active only
+	Transactions      []Transaction `json:"transactions"` // active only: this is not a history
 }
 
 // OCPIRegistration is what the counterparty told us during the credentials
